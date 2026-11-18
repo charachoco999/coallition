@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090914">
+  <meta name="description" content="Nexus Coallition: una red de proyectos independientes que deciden conectar y apoyarse mutuamente.">
+  <title>Nexus Coallition · Independent projects, connected</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090914;
+      --surface: #111120;
+      --surface-2: #171629;
+      --line: rgba(190, 174, 255, .15);
+      --line-strong: rgba(190, 174, 255, .28);
+      --text: #f4f0ff;
+      --muted: #aaa5c0;
+      --subtle: #77728e;
+      --violet: #a78bfa;
+      --violet-bright: #c4b5fd;
+      --cyan: #8ce5dc;
+      --radius: 22px;
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 50% -16%, rgba(115, 82, 214, .22), transparent 42rem),
+        radial-gradient(ellipse at 95% 42%, rgba(65, 159, 166, .07), transparent 30rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .16;
+      background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: linear-gradient(to bottom, black, transparent 88%);
+    }
+    a { color: inherit; }
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(var(--max), calc(100% - 44px)); margin-inline: auto; }
+
+    .topbar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 25px 0;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; }
+    .brand-mark {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border: 1px solid rgba(196,181,253,.38);
+      border-radius: 12px;
+      background: linear-gradient(145deg, rgba(167,139,250,.22), rgba(140,229,220,.08));
+      box-shadow: 0 0 28px rgba(139,92,246,.13), inset 0 1px rgba(255,255,255,.08);
+    }
+    .brand-mark svg { width: 23px; height: 23px; }
+    .brand-name { font-size: 12px; font-weight: 780; letter-spacing: .16em; }
+    .brand-name span { color: var(--muted); font-weight: 550; }
+    .top-link {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: .06em;
+      text-decoration: none;
+      transition: color .2s ease;
+    }
+    .top-link:hover { color: var(--text); }
+
+    .hero {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      padding: clamp(68px, 10vw, 120px) 0 92px;
+      text-align: center;
+      isolation: isolate;
+    }
+    .hero-orbit {
+      position: absolute;
+      z-index: -1;
+      top: 30px;
+      left: 50%;
+      width: min(690px, 88vw);
+      aspect-ratio: 1.75;
+      border: 1px solid rgba(167,139,250,.10);
+      border-radius: 50%;
+      transform: translateX(-50%) rotate(-9deg);
+      box-shadow: 0 0 90px rgba(124, 83, 220, .08), inset 0 0 70px rgba(124, 83, 220, .035);
+      pointer-events: none;
+    }
+    .hero-orbit::before, .hero-orbit::after {
+      content: "";
+      position: absolute;
+      inset: 12%;
+      border: 1px solid rgba(140,229,220,.09);
+      border-radius: 50%;
+      transform: rotate(18deg);
+    }
+    .hero-orbit::after { inset: 25%; border-color: rgba(167,139,250,.09); transform: rotate(-32deg); }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 23px;
+      padding: 8px 13px;
+      color: #c7b9f4;
+      border: 1px solid rgba(167,139,250,.22);
+      border-radius: 999px;
+      background: rgba(26, 21, 45, .72);
+      font-size: 10px;
+      font-weight: 760;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+    h1 {
+      max-width: 900px;
+      margin: 0;
+      font-size: clamp(48px, 9vw, 100px);
+      line-height: .99;
+      letter-spacing: -.075em;
+      font-weight: 820;
+    }
+    h1 .gradient {
+      display: block;
+      padding-bottom: .08em;
+      color: transparent;
+      background: linear-gradient(100deg, #eee9ff 5%, #c5b3ff 46%, #91e2dc 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+    .hero-copy {
+      max-width: 610px;
+      margin: 25px auto 0;
+      color: var(--muted);
+      font-size: clamp(15px, 2vw, 18px);
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 32px; }
+    .button {
+      display: inline-flex;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 19px;
+      border: 1px solid transparent;
+      border-radius: 13px;
+      font-size: 13px;
+      font-weight: 750;
+      text-decoration: none;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+    }
+    .button:hover { transform: translateY(-2px); }
+    .button-primary {
+      color: #171126;
+      background: linear-gradient(105deg, #c4b5fd, #a5e8df);
+      box-shadow: 0 8px 30px rgba(167,139,250,.20);
+    }
+    .button-primary:hover { box-shadow: 0 12px 34px rgba(167,139,250,.3); }
+    .button-secondary { color: var(--text); border-color: var(--line-strong); background: rgba(255,255,255,.035); }
+    .button-secondary:hover { border-color: rgba(196,181,253,.55); background: rgba(167,139,250,.08); }
+    .button svg { width: 16px; height: 16px; }
+
+    .hero-footnote {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-top: 54px;
+      color: var(--subtle);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .hero-footnote span { display: inline-flex; align-items: center; gap: 8px; }
+    .hero-footnote b { color: #d9d0f7; font-size: 13px; letter-spacing: 0; }
+    .hero-footnote i { width: 3px; height: 3px; border-radius: 50%; background: #625b7c; }
+
+    .section { padding: 42px 0 78px; }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 25px; margin-bottom: 22px; }
+    .section-kicker { margin: 0 0 7px; color: #b5a3f4; font-size: 10px; font-weight: 800; letter-spacing: .17em; text-transform: uppercase; }
+    h2 { margin: 0; font-size: clamp(26px, 4vw, 37px); line-height: 1.1; letter-spacing: -.045em; }
+    .section-description { max-width: 420px; margin: 0; color: var(--muted); font-size: 13px; }
+    .member-count { flex: 0 0 auto; padding: 7px 11px; border: 1px solid var(--line); border-radius: 9px; color: #d7cff1; background: rgba(255,255,255,.025); font-size: 11px; font-weight: 700; }
+
+    .projects-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .project-card {
+      position: relative;
+      min-height: 260px;
+      overflow: hidden;
+      padding: 25px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(27,25,48,.93), rgba(15,15,29,.96));
+      box-shadow: 0 18px 65px rgba(0,0,0,.17);
+    }
+    .project-card::before {
+      content: "";
+      position: absolute;
+      top: -100px;
+      right: -80px;
+      width: 260px;
+      height: 260px;
+      border: 1px solid rgba(167,139,250,.12);
+      border-radius: 50%;
+      box-shadow: 0 0 0 28px rgba(167,139,250,.025), 0 0 0 58px rgba(167,139,250,.018);
+      pointer-events: none;
+    }
+    .project-card-main { position: relative; z-index: 1; display: flex; align-items: start; justify-content: space-between; gap: 18px; }
+    .project-monogram {
+      display: grid;
+      width: 62px;
+      height: 62px;
+      flex: 0 0 auto;
+      place-items: center;
+      border: 1px solid rgba(196,181,253,.38);
+      border-radius: 19px;
+      color: #e9e1ff;
+      background: linear-gradient(140deg, rgba(167,139,250,.27), rgba(140,229,220,.10));
+      box-shadow: inset 0 1px rgba(255,255,255,.1), 0 8px 28px rgba(114,85,207,.12);
+      font-size: 19px;
+      font-weight: 850;
+      letter-spacing: -.08em;
+    }
+    .member-tag { display: inline-flex; align-items: center; gap: 7px; padding: 6px 9px; border: 1px solid rgba(140,229,220,.2); border-radius: 999px; color: #9de4da; background: rgba(85,184,169,.07); font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .member-tag::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--cyan); }
+    .project-card h3 { margin: 25px 0 5px; font-size: 23px; letter-spacing: -.045em; }
+    .project-type { margin: 0 0 13px; color: #b7a7ed; font-size: 10px; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; }
+    .project-description { max-width: 470px; margin: 0; color: var(--muted); font-size: 13px; }
+    .founder-note { display: inline-flex; align-items: center; gap: 7px; margin-top: 20px; color: #8d87a6; font-size: 10px; font-weight: 650; }
+    .founder-note svg { width: 13px; height: 13px; color: var(--violet); }
+    .future-card {
+      display: grid;
+      min-height: 260px;
+      place-items: center;
+      padding: 25px;
+      border: 1px dashed rgba(167,139,250,.24);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.012);
+      text-align: center;
+    }
+    .future-icon { display: grid; width: 43px; height: 43px; margin: 0 auto 13px; place-items: center; border: 1px solid var(--line); border-radius: 14px; color: #b4a5e7; background: rgba(167,139,250,.06); }
+    .future-icon svg { width: 19px; height: 19px; }
+    .future-card h3 { margin: 0; font-size: 14px; }
+    .future-card p { max-width: 230px; margin: 6px 0 0; color: var(--subtle); font-size: 11px; }
+
+    .manifesto {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 40px;
+      padding: 35px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(120deg, rgba(21,20,39,.95), rgba(13,19,30,.88));
+    }
+    .manifesto h2 { max-width: 390px; margin-top: 8px; }
+    .manifesto-lead { margin: 14px 0 0; color: var(--muted); font-size: 13px; }
+    .principles { display: grid; gap: 13px; }
+    .principle { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; }
+    .principle-number { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid var(--line); border-radius: 10px; color: #c5b5fa; font-size: 10px; font-weight: 800; }
+    .principle h3 { margin: 1px 0 3px; font-size: 13px; }
+    .principle p { margin: 0; color: var(--muted); font-size: 11px; }
+
+    .join-panel {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+      overflow: hidden;
+      margin-top: 24px;
+      padding: 28px 31px;
+      border: 1px solid rgba(167,139,250,.28);
+      border-radius: var(--radius);
+      background: linear-gradient(105deg, rgba(82,57,145,.2), rgba(45,93,98,.13));
+    }
+    .join-panel::after { content: ""; position: absolute; right: 12%; top: -95px; width: 240px; height: 240px; border: 1px solid rgba(196,181,253,.13); border-radius: 50%; box-shadow: 0 0 0 24px rgba(196,181,253,.025); pointer-events: none; }
+    .join-panel h2 { position: relative; z-index: 1; font-size: clamp(22px, 3vw, 29px); }
+    .join-panel p { position: relative; z-index: 1; margin: 7px 0 0; color: var(--muted); font-size: 12px; }
+    .join-panel .button { position: relative; z-index: 1; flex: 0 0 auto; }
+
+    .terms { padding: 70px 0 76px; }
+    .terms-heading { max-width: 640px; margin-bottom: 24px; }
+    .terms-heading p:last-child { margin: 11px 0 0; color: var(--muted); font-size: 13px; }
+    .terms-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .term {
+      display: grid;
+      grid-template-columns: 39px 1fr;
+      gap: 13px;
+      padding: 19px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(17,17,32,.72);
+    }
+    .term-index { color: #ab99ed; font-size: 11px; font-weight: 850; letter-spacing: .06em; }
+    .term h3 { margin: 0 0 5px; font-size: 13px; }
+    .term p { margin: 0; color: var(--muted); font-size: 11px; }
+    .terms-note { margin: 15px 0 0; color: var(--subtle); font-size: 10px; }
+
+    .public-contact { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; padding: 0 0 20px; }
+    .public-contact[hidden] { display: none !important; }
+    .public-contact .button { min-height: 38px; padding-inline: 13px; font-size: 11px; }
+    footer { border-top: 1px solid rgba(190,174,255,.1); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px 0 28px; }
+    .footer-brand { color: #d5cafa; font-size: 10px; font-weight: 800; letter-spacing: .15em; }
+    .footer-copy { color: var(--subtle); font-size: 10px; }
+
+    dialog {
+      width: min(540px, calc(100% - 28px));
+      max-height: min(88vh, 760px);
+      padding: 0;
+      overflow: auto;
+      color: var(--text);
+      border: 1px solid rgba(196,181,253,.26);
+      border-radius: 22px;
+      background: #111120;
+      box-shadow: 0 25px 100px rgba(0,0,0,.65);
+    }
+    dialog::backdrop { background: rgba(3,3,10,.76); backdrop-filter: blur(7px); }
+    .dialog-inner { padding: 25px; }
+    .dialog-top { display: flex; align-items: start; justify-content: space-between; gap: 15px; }
+    .dialog-top h2 { font-size: 25px; }
+    .dialog-top p { margin: 7px 0 20px; color: var(--muted); font-size: 12px; }
+    .close-button { display: grid; width: 34px; height: 34px; flex: 0 0 auto; place-items: center; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); background: rgba(255,255,255,.03); }
+    .close-button svg { width: 16px; height: 16px; }
+    .form-grid { display: grid; gap: 13px; }
+    .field { display: grid; gap: 6px; }
+    .field label { color: #ddd6f2; font-size: 11px; font-weight: 750; }
+    .field input, .field textarea { width: 100%; padding: 11px 12px; border: 1px solid rgba(190,174,255,.19); border-radius: 10px; outline: none; color: var(--text); background: rgba(4,4,13,.45); font-size: 12px; }
+    .field input:focus, .field textarea:focus { border-color: rgba(167,139,250,.72); box-shadow: 0 0 0 3px rgba(167,139,250,.1); }
+    .field textarea { min-height: 94px; resize: vertical; }
+    .form-hint { margin: 1px 0 0; color: var(--subtle); font-size: 10px; }
+    .form-submit { width: 100%; margin-top: 3px; }
+    .form-status { display: none; margin: 12px 0 0; padding: 11px 12px; border: 1px solid rgba(140,229,220,.2); border-radius: 10px; color: #a9e6de; background: rgba(85,184,169,.07); font-size: 11px; }
+    .form-status.visible { display: block; }
+    .privacy-note { margin: 12px 0 0; color: var(--subtle); font-size: 10px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    @media (max-width: 720px) {
+      .shell { width: min(var(--max), calc(100% - 30px)); }
+      .topbar { padding: 18px 0; }
+      .hero { padding-top: 76px; padding-bottom: 66px; }
+      .hero-footnote { flex-wrap: wrap; justify-content: center; margin-top: 42px; }
+      .section { padding: 30px 0 55px; }
+      .section-heading { align-items: start; flex-direction: column; gap: 12px; }
+      .projects-grid, .terms-grid { grid-template-columns: 1fr; }
+      .manifesto { grid-template-columns: 1fr; gap: 25px; padding: 25px; }
+      .join-panel { align-items: start; flex-direction: column; padding: 24px; }
+      .join-panel .button { width: 100%; }
+      .terms { padding: 52px 0 58px; }
+      .footer-inner { align-items: start; flex-direction: column; gap: 7px; }
+    }
+    @media (max-width: 420px) {
+      .brand-name { font-size: 10px; }
+      .top-link { font-size: 10px; }
+      .hero-actions { width: 100%; }
+      .hero-actions .button { width: 100%; }
+      .hero-footnote { gap: 10px; font-size: 9px; }
+      .project-card { padding: 21px; }
+      .member-tag { font-size: 8px; }
+      .dialog-inner { padding: 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="shell topbar">
+    <a class="brand" href="#top" aria-label="Nexus Coallition, inicio">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 17V7l8 10V7l8 10V7" stroke="#d9ceff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 19h16" stroke="#8ce5dc" stroke-width="1.5" stroke-linecap="round" opacity=".85"/></svg>
+      </span>
+      <span class="brand-name">NEXUS <span>COLLECTIVE</span></span>
+    </a>
+    <a class="top-link" href="#terms">TÉRMINOS DE ADHESIÓN <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main id="top">
+    <section class="shell hero" aria-labelledby="page-title">
+      <div class="hero-orbit" aria-hidden="true"></div>
+      <p class="eyebrow"><span class="eyebrow-dot"></span> Una red de proyectos independientes</p>
+      <h1 id="page-title">Nexus <span class="gradient">Coallition</span></h1>
+      <p class="hero-copy">Proyectos distintos. Caminos propios. Una conexión en común. Un espacio para descubrir iniciativas, crear vínculos y crecer sin perder la independencia.</p>
+      <div class="hero-actions">
+        <button class="button button-primary" type="button" data-open-application>
+          Solicitar incorporación
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <a class="button button-secondary" href="#projects">Explorar proyectos <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero-footnote" aria-label="Resumen de la coalición">
+        <span><b>01</b> miembro fundador</span><i aria-hidden="true"></i>
+        <span><b>∞</b> posibilidades</span><i aria-hidden="true"></i>
+        <span>Independencia ante todo</span>
+      </div>
+    </section>
+
+    <section class="shell section" id="projects" aria-labelledby="projects-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">El directorio</p>
+          <h2 id="projects-title">Proyectos conectados</h2>
+        </div>
+        <span class="member-count">01 PROYECTO EN LA RED</span>
+      </div>
+      <div class="projects-grid">
+        <article class="project-card" aria-label="Nexus Collective, miembro fundador">
+          <div class="project-card-main">
+            <div class="project-monogram" aria-hidden="true">NC</div>
+            <span class="member-tag">Miembro fundador</span>
+          </div>
+          <h3>Nexus Collective</h3>
+          <p class="project-type">Colectivo · Tecnología y comunidad</p>
+          <p class="project-description">El proyecto que impulsa esta coalición. Un espacio para desarrollar ideas, herramientas y comunidades digitales, y conectar con otras iniciativas independientes.</p>
+          <span class="founder-note">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 3 2.3 5.1 5.6.6-4.2 3.8 1.2 5.5-4.9-2.8-4.9 2.8 1.2-5.5L4.1 8.7l5.6-.6L12 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            Fundador de Nexus Coallition
+          </span>
+        </article>
+        <div class="future-card" aria-label="Espacio reservado para futuras alianzas">
+          <div>
+            <span class="future-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+            <h3>Tu proyecto podría estar aquí</h3>
+            <p>Este espacio está reservado para las próximas alianzas de la coalición.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell section" aria-labelledby="about-title">
+      <div class="manifesto">
+        <div>
+          <p class="section-kicker">La idea detrás de la red</p>
+          <h2 id="about-title">Colaborar no significa dejar de ser independiente.</h2>
+          <p class="manifesto-lead">La Coallition busca reunir proyectos con identidad propia. Estar conectados no implica compartir dirección, equipo, decisiones ni obligaciones: cada miembro conserva su espacio.</p>
+        </div>
+        <div class="principles">
+          <div class="principle"><span class="principle-number">01</span><div><h3>Identidad propia</h3><p>Cada proyecto mantiene su nombre, sus canales y su forma de trabajar.</p></div></div>
+          <div class="principle"><span class="principle-number">02</span><div><h3>Respeto mutuo</h3><p>Una alianza no da derecho a exigir trabajo, promoción ni servicios a otro miembro.</p></div></div>
+          <div class="principle"><span class="principle-number">03</span><div><h3>Descubrimiento</h3><p>La coalición facilita que las personas encuentren proyectos que quizá no conocerían de otra forma.</p></div></div>
+        </div>
+      </div>
+      <div class="join-panel">
+        <div>
+          <p class="section-kicker">¿Tienes un proyecto?</p>
+          <h2>Conectemos nuevas ideas.</h2>
+          <p>Cuéntanos qué estás construyendo y dónde podemos conocerlo.</p>
+        </div>
+        <button class="button button-primary" type="button" data-open-application>Enviar una solicitud <span aria-hidden="true">↗</span></button>
+      </div>
+    </section>
+
+    <section class="shell terms" id="terms" aria-labelledby="terms-title">
+      <div class="terms-heading">
+        <p class="section-kicker">Antes de unirse</p>
+        <h2 id="terms-title">Términos de adhesión</h2>
+        <p>La incorporación a Nexus Coallition implica respetar unas condiciones sencillas para mantener una red equilibrada y útil para todos sus miembros.</p>
+      </div>
+      <div class="terms-grid">
+        <article class="term"><span class="term-index">01</span><div><h3>Respeto y consentimiento</h3><p>Ningún miembro puede exigir a otro colaboraciones, tareas, promoción, soporte, servicios ni ninguna otra demanda si ese otro miembro no desea ofrecerlos. La pertenencia a la coalición no crea obligaciones de colaboración.</p></div></article>
+        <article class="term"><span class="term-index">02</span><div><h3>Límites de suscripciones y tiendas</h3><p>Cada proyecto podrá tener como máximo un servicio de suscripción y una tienda. Las plataformas de donaciones, micromecenazgo o apoyo voluntario, como GoFundMe, Buy Me a Coffee y similares, no cuentan para estos límites.</p></div></article>
+        <article class="term"><span class="term-index">03</span><div><h3>Un enlace público</h3><p>El proyecto debe poder asociarse a, al menos, un enlace público donde conocerlo: un servidor o perfil de Discord, una web propia u otra página accesible de internet relacionada con el proyecto.</p></div></article>
+        <article class="term"><span class="term-index">04</span><div><h3>Prioridad a proyectos independientes</h3><p>Se dará prioridad a proyectos independientes durante la revisión de solicitudes. Se valorarán especialmente las iniciativas creadas y mantenidas por sus propios equipos o comunidades.</p></div></article>
+      </div>
+      <p class="terms-note">Enviar una solicitud no garantiza la aceptación. La adhesión queda pendiente de revisión y aprobación por parte de Nexus Coallition.</p>
+    </section>
+  </main>
+
+  <div class="shell public-contact" id="public-contact" hidden aria-label="Canales públicos de contacto"></div>
+
+  <footer>
+    <div class="shell footer-inner">
+      <span class="footer-brand">NEXUS COALLITION</span>
+      <span class="footer-copy">Una red de proyectos, no una sola identidad. · <span id="year"></span></span>
+    </div>
+  </footer>
+
+  <dialog id="application-dialog" aria-labelledby="application-title">
+    <div class="dialog-inner">
+      <div class="dialog-top">
+        <div>
+          <p class="section-kicker">Solicitud de adhesión</p>
+          <h2 id="application-title">Presenta tu proyecto</h2>
+          <p>Déjanos la información básica para que podamos conocer la iniciativa.</p>
+        </div>
+        <button class="close-button" type="button" aria-label="Cerrar" data-close-application><svg viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      </div>
+      <form id="application-form" class="form-grid">
+        <div class="field"><label for="project-name">Nombre del proyecto</label><input id="project-name" name="project-name" maxlength="80" required placeholder="Nombre de tu proyecto"></div>
+        <div class="field"><label for="project-link">Enlace público</label><input id="project-link" name="project-link" type="url" maxlength="300" required placeholder="https://..."><p class="form-hint">Web, Discord, perfil o cualquier página pública sobre el proyecto.</p></div>
+        <div class="field"><label for="project-description">¿De qué trata?</label><textarea id="project-description" name="project-description" maxlength="1200" required placeholder="Describe brevemente qué hacéis y qué os gustaría aportar a la coalición."></textarea></div>
+        <div class="field"><label for="project-contact">Contacto público del proyecto (opcional)</label><input id="project-contact" name="project-contact" type="url" maxlength="300" placeholder="https://..."><p class="form-hint">Puedes dejar un enlace de contacto del proyecto. Evita incluir datos personales que no quieras hacer públicos.</p></div>
+        <button class="button button-primary form-submit" type="submit">Preparar solicitud <span aria-hidden="true">↗</span></button>
+      </form>
+      <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+      <p class="privacy-note">Esta es una página estática: el formulario no envía ni almacena datos. Al prepararla, la solicitud se copia en tu portapapeles para que puedas enviarla por un canal público de contacto.</p>
+    </div>
+  </dialog>
+
+  <script>
+    // Configura aquí un canal público del proyecto si quieres mostrarlo en una futura versión.
+    // No uses una dirección personal ni una cuenta privada en una página pública.
+    const PUBLIC_CONTACT_EMAIL = "";
+    const PUBLIC_DISCORD_URL = "";
+
+    const dialog = document.getElementById('application-dialog');
+    const form = document.getElementById('application-form');
+    const status = document.getElementById('form-status');
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    document.querySelectorAll('[data-open-application]').forEach(button => {
+      button.addEventListener('click', () => {
+        status.classList.remove('visible');
+        if (typeof dialog.showModal === 'function') dialog.showModal();
+        else dialog.setAttribute('open', '');
+      });
+    });
+
+    document.querySelectorAll('[data-close-application]').forEach(button => {
+      button.addEventListener('click', () => {
+        if (typeof dialog.close === 'function') dialog.close();
+        else dialog.removeAttribute('open');
+      });
+    });
+
+    dialog.addEventListener('click', event => {
+      if (event.target === dialog && typeof dialog.close === 'function') dialog.close();
+    });
+
+    function safePublicUrl(value) {
+      if (!value) return '';
+      try {
+        const url = new URL(value);
+        return ['https:', 'http:'].includes(url.protocol) ? url.href : '';
+      } catch { return ''; }
+    }
+
+    const publicContact = document.getElementById('public-contact');
+    const publicEmail = String(PUBLIC_CONTACT_EMAIL || '').trim();
+    const publicDiscord = safePublicUrl(String(PUBLIC_DISCORD_URL || '').trim());
+    if (publicEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(publicEmail)) {
+      const emailLink = document.createElement('a');
+      emailLink.className = 'button button-secondary';
+      emailLink.href = `mailto:${publicEmail}`;
+      emailLink.textContent = 'Contacto por correo';
+      publicContact.appendChild(emailLink);
+    }
+    if (publicDiscord) {
+      const discordLink = document.createElement('a');
+      discordLink.className = 'button button-secondary';
+      discordLink.href = publicDiscord;
+      discordLink.target = '_blank';
+      discordLink.rel = 'noopener noreferrer';
+      discordLink.textContent = 'Discord';
+      publicContact.appendChild(discordLink);
+    }
+    if (publicContact.childElementCount) publicContact.hidden = false;
+
+    async function copyText(value) {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(value);
+        return true;
+      }
+      const helper = document.createElement('textarea');
+      helper.value = value;
+      helper.setAttribute('readonly', '');
+      helper.style.position = 'fixed';
+      helper.style.opacity = '0';
+      document.body.appendChild(helper);
+      helper.select();
+      const copied = document.execCommand('copy');
+      helper.remove();
+      if (!copied) throw new Error('No se ha podido acceder al portapapeles.');
+      return true;
+    }
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+
+      const data = new FormData(form);
+      const link = safePublicUrl(String(data.get('project-link') || '').trim());
+      const contact = safePublicUrl(String(data.get('project-contact') || '').trim());
+      if (!link) {
+        document.getElementById('project-link').setCustomValidity('Introduce un enlace HTTP o HTTPS válido.');
+        document.getElementById('project-link').reportValidity();
+        document.getElementById('project-link').setCustomValidity('');
+        return;
+      }
+      if (data.get('project-contact') && !contact) {
+        document.getElementById('project-contact').setCustomValidity('Introduce un enlace HTTP o HTTPS válido.');
+        document.getElementById('project-contact').reportValidity();
+        document.getElementById('project-contact').setCustomValidity('');
+        return;
+      }
+
+      const application = [
+        'SOLICITUD DE INCORPORACIÓN · NEXUS COALLITION',
+        '',
+        `Proyecto: ${String(data.get('project-name')).trim()}`,
+        `Enlace público: ${link}`,
+        `Contacto público: ${contact || 'No indicado'}`,
+        '',
+        'Descripción:',
+        String(data.get('project-description')).trim()
+      ].join('\n');
+
+      try {
+        await copyText(application);
+        status.textContent = 'Solicitud copiada. Pégala y envíala por un canal público de contacto de Nexus Collective cuando esté configurado. Esta página no la ha enviado ni almacenado.';
+        status.classList.add('visible');
+      } catch (error) {
+        status.textContent = 'No se ha podido copiar automáticamente. Puedes revisar el formulario e intentarlo desde un navegador con acceso al portapapeles.';
+        status.classList.add('visible');
+      }
+    });
+  </script>
+</body>
+</html>
